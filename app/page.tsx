@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import useLLM from "usellm";
+import Image from 'next/image';
+import chatbot from "./chatbot.png";
 
 export default function MyComponent() {
   const llm = useLLM({ serviceUrl:"/api/llmservice" });
@@ -33,9 +35,21 @@ export default function MyComponent() {
   return (
     <div>
       <div className="max-w-3xl-mx-auto w-full text-center py-4">
+        <div className= "flex items-center justify-center">
+
+        <Image
+          src={chatbot}
+          width={50}
+          height={100}
+          alt= ""
+          className = "h-15"
+          />
+        
         <h1 className="text-4xl text-gray-800 font-semibold">
           LeetCode Assistant Leetbot
         </h1>
+        
+          </div>
         <div className="text-xl text-gray-400 mt-2">
           Hi there! This is your personal programming coach powered by ChatGPT.{" "}
           <br />
