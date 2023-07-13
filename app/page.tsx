@@ -9,6 +9,9 @@ export default function MyComponent() {
   const [result, setResult] = useState("");
   const [problem, setProblem] = useState("");
   const [code, setCode] = useState("");
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [result2, setResult2] = useState("");
+
 
   function handleSubmit() {
     if (!problem) {
@@ -31,6 +34,32 @@ export default function MyComponent() {
       onError: (error: any) => console.error("Failed to send", error),
     });
   }
+
+  function handleAnswer(){
+    if (!problem) {
+      window.alert("Problem statement is required");
+      return;
+    }
+    if (!code) {
+      window.alert("Code is required");
+      return;
+    }
+
+    llm.chat({
+      template: "leetcode-answer",
+      inputs: {
+        problem: problem,
+        code: code,
+      },
+      stream: true,
+      onStream: ({message}) => setResult2(message.content),
+      onError: (error: any) => console.error("Failed to send", error),
+    });
+    setShowAnswer(true);
+
+  }
+
+
 
   return (
     <div>
@@ -98,14 +127,33 @@ export default function MyComponent() {
         >
           Submit
         </button>
-      </div>
 
-      {result && (
+        {result && (
         <div className="max-w-4xl w-full mx-auto text-lg p-4 flex flex-col">
           <label className="font-medium">Assessment</label>
           <div className="text-lg whitespace-pre-wrap">{result}</div>
+
+          <button
+          onClick={handleAnswer}
+          className="w-35 border border-green-600 bg-green-500 hover:bg-green-600 active:bg-green-700 text-white rounded p-2 font-small"
+        >
+          View Answer
+        </button>
         </div>
       )}
+
+      {showAnswer && (
+        <div className="max-w-4xl w-full mx-auto text-lg p-4 flex flex-col">
+        <label className="font-medium">Answer:</label>
+        <div className="text-lg whitespace-pre-wrap font-mono">{result2}</div>
+      </div>
+    )}
+      </div>
+
+      
+
+
+
     </div>
   );
 }
